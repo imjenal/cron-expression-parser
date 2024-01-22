@@ -14,7 +14,7 @@ type MonthField struct {
 }
 
 func NewMonthField(value string) *MonthField {
-	startRange, endRange, _ := config.GetRange("month")
+	startRange, endRange, _ := config.GetRange(config.MonthField)
 	return &MonthField{
 		Value:      value,
 		StartRange: startRange,

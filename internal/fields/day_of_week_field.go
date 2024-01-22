@@ -14,7 +14,7 @@ type DayOfWeekField struct {
 }
 
 func NewDayOfWeekField(value string) *DayOfWeekField {
-	startRange, endRange, _ := config.GetRange("day_of_week")
+	startRange, endRange, _ := config.GetRange(config.DayOfWeekField)
 	return &DayOfWeekField{
 		Value:      value,
 		StartRange: startRange,

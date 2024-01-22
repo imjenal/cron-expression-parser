@@ -14,7 +14,7 @@ type MinuteField struct {
 }
 
 func NewMinuteField(value string) *MinuteField {
-	startRange, endRange, _ := config.GetRange("minute")
+	startRange, endRange, _ := config.GetRange(config.MinuteField)
 	return &MinuteField{
 		Value:      value,
 		StartRange: startRange,

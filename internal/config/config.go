@@ -1,12 +1,20 @@
 package config
 
+const (
+	MinuteField     = "minute"
+	HourField       = "hour"
+	DayOfMonthField = "day of month"
+	MonthField      = "month"
+	DayOfWeekField  = "day of week"
+)
+
 // CronFieldRanges defines the valid ranges for different cron fields.
 var CronFieldRanges = map[string][2]int{
-	"minute":       {0, 59},
-	"hour":         {0, 23},
-	"day_of_month": {1, 31},
-	"month":        {1, 12},
-	"day_of_week":  {0, 6},
+	MinuteField:     {0, 59},
+	HourField:       {0, 23},
+	DayOfMonthField: {1, 31},
+	MonthField:      {1, 12},
+	DayOfWeekField:  {0, 6},
 }
 
 // GetRange returns the range for a given field type.

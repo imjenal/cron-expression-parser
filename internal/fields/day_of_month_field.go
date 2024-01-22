@@ -14,7 +14,7 @@ type DayOfMonthField struct {
 }
 
 func NewDayOfMonthField(value string) *DayOfMonthField {
-	startRange, endRange, _ := config.GetRange("day_of_month")
+	startRange, endRange, _ := config.GetRange(config.DayOfMonthField)
 	return &DayOfMonthField{
 		Value:      value,
 		StartRange: startRange,

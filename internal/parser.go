@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"cron_expr_parser/internal/config"
 	"cron_expr_parser/internal/fields"
 	"fmt"
 	"strings"
@@ -8,15 +9,15 @@ import (
 
 func NewCronField(fieldType, value string) (CronField, error) {
 	switch fieldType {
-	case "minute":
+	case config.MinuteField:
 		return fields.NewMinuteField(value), nil
-	case "hour":
+	case config.HourField:
 		return fields.NewHourField(value), nil
-	case "day of month":
+	case config.DayOfMonthField:
 		return fields.NewDayOfMonthField(value), nil
-	case "month":
+	case config.MonthField:
 		return fields.NewMonthField(value), nil
-	case "day of week":
+	case config.DayOfWeekField:
 		return fields.NewDayOfWeekField(value), nil
 	default:
 		return nil, fmt.Errorf("unknown field type: %s", fieldType)
@@ -25,14 +26,24 @@ func NewCronField(fieldType, value string) (CronField, error) {
 
 func ParseCronExpression(cronExpression string) ([]string, [][]int, string, error) {
 	fields := strings.Fields(cronExpression)
-	if len(fields) != 6 {
-		return nil, nil, "", fmt.Errorf("Invalid cron expression. It should have exactly 6 fields.")
+	num_fields := len(fields)
+	expectedFields := len(config.CronFieldRanges) + 1
+	if num_fields != expectedFields {
+		return nil, nil, "", fmt.Errorf("Invalid cron expression. It should have exactly %d fields", expectedFields)
 	}
 
-	fieldNames := []string{"minute", "hour", "day of month", "month", "day of week"}
 	var fieldValues [][]int
+	fieldNames := []string{
+		config.MinuteField,
+		config.HourField,
+		config.DayOfMonthField,
+		config.MonthField,
+		config.DayOfWeekField,
+	}
 
-	for i, fieldValue := range fields[:5] {
+	fmt.Println(fieldNames)
+
+	for i, fieldValue := range fields[:num_fields-1] {
 		cronField, err := NewCronField(fieldNames[i], fieldValue)
 		if err != nil {
 			return nil, nil, "", err
@@ -50,7 +61,7 @@ func ParseCronExpression(cronExpression string) ([]string, [][]int, string, erro
 		fieldValues = append(fieldValues, expandedValues)
 	}
 
-	command := fields[5]
+	command := fields[num_fields-1]
 	fieldValues = append(fieldValues, []int{}) // Add an empty slice for the command
 
 	return fieldNames, fieldValues, command, nil
