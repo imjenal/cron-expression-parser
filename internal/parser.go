@@ -41,8 +41,6 @@ func ParseCronExpression(cronExpression string) ([]string, [][]int, string, erro
 		config.DayOfWeekField,
 	}
 
-	fmt.Println(fieldNames)
-
 	for i, fieldValue := range fields[:num_fields-1] {
 		cronField, err := NewCronField(fieldNames[i], fieldValue)
 		if err != nil {
