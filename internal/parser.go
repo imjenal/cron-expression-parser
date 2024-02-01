@@ -24,14 +24,19 @@ func NewCronField(fieldType, value string) (CronField, error) {
 	}
 }
 
-func ParseCronExpression(cronExpression string) ([]string, [][]int, string, error) {
+func ParseCronExpression(cronExpression string) ([]string, [][]int, []string, error) {
+	emptyCommand := make([]string, 0)
 	fields := strings.Fields(cronExpression)
+	fmt.Println(fields)
 	num_fields := len(fields)
-	expectedFields := len(config.CronFieldRanges) + 1
-	if num_fields != expectedFields {
-		return nil, nil, "", fmt.Errorf("Invalid cron expression. It should have exactly %d fields", expectedFields)
-	}
-
+	fmt.Println(num_fields)
+	fieldsWithoutCommandLen := len(config.CronFieldRanges)
+	fmt.Println(fieldsWithoutCommandLen)
+	//expectedFields := len(config.CronFieldRanges) + 1
+	/*	if fieldsWithoutCommandLen+1 != expectedFields {
+			return nil, nil, emptyCommand, fmt.Errorf("Invalid cron expression. It should have exactly %d fields", expectedFields)
+		}
+	*/
 	var fieldValues [][]int
 	fieldNames := []string{
 		config.MinuteField,
@@ -41,25 +46,25 @@ func ParseCronExpression(cronExpression string) ([]string, [][]int, string, erro
 		config.DayOfWeekField,
 	}
 
-	for i, fieldValue := range fields[:num_fields-1] {
+	for i, fieldValue := range fields[:fieldsWithoutCommandLen] {
 		cronField, err := NewCronField(fieldNames[i], fieldValue)
 		if err != nil {
-			return nil, nil, "", err
+			return nil, nil, emptyCommand, err
 		}
 
 		if err := cronField.Validate(); err != nil {
-			return nil, nil, "", err
+			return nil, nil, emptyCommand, err
 		}
 
 		expandedValues, err := cronField.Expand()
 		if err != nil {
-			return nil, nil, "", err
+			return nil, nil, emptyCommand, err
 		}
 
 		fieldValues = append(fieldValues, expandedValues)
 	}
 
-	command := fields[num_fields-1]
+	command := fields[fieldsWithoutCommandLen:num_fields]
 	fieldValues = append(fieldValues, []int{}) // Add an empty slice for the command
 
 	return fieldNames, fieldValues, command, nil

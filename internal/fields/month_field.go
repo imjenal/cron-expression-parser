@@ -14,6 +14,7 @@ type MonthField struct {
 }
 
 func NewMonthField(value string) *MonthField {
+	value = config.ConvertNamesToNumbers(value, config.DayOfMonthNames)
 	startRange, endRange, _ := config.GetRange(config.MonthField)
 	return &MonthField{
 		Value:      value,
